@@ -1,0 +1,599 @@
+{
+    "contraception": {
+      "fail_if_found": true
+    },
+    "transdermal": {
+      "fail_if_found": true
+    },
+    "vaccines": {
+      "fail_if_found": true
+    },
+    "activism": {
+      "fail_if_found": true
+    },
+    "activists": {
+      "fail_if_found": true
+    },
+    "advocacy": {
+      "fail_if_found": true
+    },
+    "advocate": {
+      "fail_if_found": true
+    },
+    "advocates": {
+      "fail_if_found": true
+    },
+    "affirming care": {
+      "fail_if_found": true
+    },
+    "all-inclusive": {
+      "fail_if_found": true
+    },
+    "allyship": {
+      "fail_if_found": true
+    },
+    "anti-racism": {
+      "fail_if_found": true
+    },
+    "antiracist": {
+      "fail_if_found": true
+    },
+    "assigned at birth": {
+      "fail_if_found": true
+    },
+    "assigned female at birth": {
+      "fail_if_found": true
+    },
+    "assigned male at birth": {
+      "fail_if_found": true
+    },
+    "at risk": {
+      "fail_if_found": true
+    },
+    "barrier": {
+      "fail_if_found": true
+    },
+    "barriers": {
+      "fail_if_found": true
+    },
+    "belong": {
+      "fail_if_found": true
+    },
+    "bias": {
+      "fail_if_found": true
+    },
+    "biased": {
+      "fail_if_found": true
+    },
+    "biased toward": {
+      "fail_if_found": true
+    },
+    "biases": {
+      "fail_if_found": true
+    },
+    "biases towards": {
+      "fail_if_found": true
+    },
+    "biologically female": {
+      "fail_if_found": true
+    },
+    "biologically male": {
+      "fail_if_found": true
+    },
+    "BIPOC": {
+      "fail_if_found": true
+    },
+    "Black": {
+      "fail_if_found": true
+    },
+    "breastfeed people": {
+      "fail_if_found": true
+    },
+    "breastfeed person": {
+      "fail_if_found": true
+    },
+    "chestfeed people": {
+      "fail_if_found": true
+    },
+    "chestfeed person": {
+      "fail_if_found": true
+    },
+    "clean energy": {
+      "fail_if_found": true
+    },
+    "climate crisis": {
+      "fail_if_found": true
+    },
+    "climate science": {
+      "fail_if_found": true
+    },
+    "commercial sex worker": {
+      "fail_if_found": true
+    },
+    "community diversity": {
+      "fail_if_found": true
+    },
+    "community equity": {
+      "fail_if_found": true
+    },
+    "confirmation bias": {
+      "fail_if_found": true
+    },
+    "cultural competence": {
+      "fail_if_found": true
+    },
+    "cultural differences": {
+      "fail_if_found": true
+    },
+    "cultural heritage": {
+      "fail_if_found": true
+    },
+    "cultural sensitivity": {
+      "fail_if_found": true
+    },
+    "culturally appropriate": {
+      "fail_if_found": true
+    },
+    "culturally responsive": {
+      "fail_if_found": true
+    },
+    "DEI": {
+      "fail_if_found": true
+    },
+    "DEIA": {
+      "fail_if_found": true
+    },
+    "DEIAB": {
+      "fail_if_found": true
+    },
+    "DEIJ": {
+      "fail_if_found": true
+    },
+    "disabilities": {
+      "fail_if_found": true
+    },
+    "disability": {
+      "fail_if_found": true
+    },
+    "discriminated": {
+      "fail_if_found": true
+    },
+    "discrimination": {
+      "fail_if_found": true
+    },
+    "discriminatory": {
+      "fail_if_found": true
+    },
+    "disparity": {
+      "fail_if_found": true
+    },
+    "diverse": {
+      "fail_if_found": true
+    },
+    "diverse backgrounds": {
+      "fail_if_found": true
+    },
+    "diverse communities": {
+      "fail_if_found": true
+    },
+    "diverse community": {
+      "fail_if_found": true
+    },
+    "diverse group": {
+      "fail_if_found": true
+    },
+    "diverse groups": {
+      "fail_if_found": true
+    },
+    "diversified": {
+      "fail_if_found": true
+    },
+    "diversify": {
+      "fail_if_found": true
+    },
+    "diversifying": {
+      "fail_if_found": true
+    },
+    "diversity": {
+      "fail_if_found": true
+    },
+    "enhance the diversity": {
+      "fail_if_found": true
+    },
+    "enhancing diversity": {
+      "fail_if_found": true
+    },
+    "environmental quality": {
+      "fail_if_found": true
+    },
+    "equal opportunity": {
+      "fail_if_found": true
+    },
+    "equality": {
+      "fail_if_found": true
+    },
+    "equitable": {
+      "fail_if_found": true
+    },
+    "equitableness": {
+      "fail_if_found": true
+    },
+    "equity": {
+      "fail_if_found": true
+    },
+    "ethnicity": {
+      "fail_if_found": true
+    },
+    "excluded": {
+      "fail_if_found": true
+    },
+    "exclusion": {
+      "fail_if_found": true
+    },
+    "expression": {
+      "fail_if_found": true
+    },
+    "female": {
+      "fail_if_found": true
+    },
+    "females": {
+      "fail_if_found": true
+    },
+    "feminism": {
+      "fail_if_found": true
+    },
+    "fostering inclusivity": {
+      "fail_if_found": true
+    },
+    "GBV": {
+      "fail_if_found": true
+    },
+    "gender": {
+      "fail_if_found": true
+    },
+    "gender based": {
+      "fail_if_found": true
+    },
+    "gender based violence": {
+      "fail_if_found": true
+    },
+    "gender diversity": {
+      "fail_if_found": true
+    },
+    "gender identity": {
+      "fail_if_found": true
+    },
+    "gender ideology": {
+      "fail_if_found": true
+    },
+    "gender-affirming care": {
+      "fail_if_found": true
+    },
+    "genders": {
+      "fail_if_found": true
+    },
+    "Gulf of Mexico": {
+      "fail_if_found": true
+    },
+    "hate speech": {
+      "fail_if_found": true
+    },
+    "health disparity": {
+      "fail_if_found": true
+    },
+    "health equity": {
+      "fail_if_found": true
+    },
+    "hispanic minority": {
+      "fail_if_found": true
+    },
+    "historically": {
+      "fail_if_found": true
+    },
+    "identity": {
+      "fail_if_found": true
+    },
+    "immigrants": {
+      "fail_if_found": true
+    },
+    "implicit bias": {
+      "fail_if_found": true
+    },
+    "implicit biases": {
+      "fail_if_found": true
+    },
+    "inclusion": {
+      "fail_if_found": true
+    },
+    "inclusive": {
+      "fail_if_found": true
+    },
+    "inclusive leadership": {
+      "fail_if_found": true
+    },
+    "inclusiveness": {
+      "fail_if_found": true
+    },
+    "inclusivity": {
+      "fail_if_found": true
+    },
+    "increase diversity": {
+      "fail_if_found": true
+    },
+    "increase the diversity": {
+      "fail_if_found": true
+    },
+    "indigenous community": {
+      "fail_if_found": true
+    },
+    "inequalities": {
+      "fail_if_found": true
+    },
+    "inequality": {
+      "fail_if_found": true
+    },
+    "inequitable": {
+      "fail_if_found": true
+    },
+    "inequities": {
+      "fail_if_found": true
+    },
+    "inequity": {
+      "fail_if_found": true
+    },
+    "injustice": {
+      "fail_if_found": true
+    },
+    "institutional": {
+      "fail_if_found": true
+    },
+    "intersectional": {
+      "fail_if_found": true
+    },
+    "intersectionality": {
+      "fail_if_found": true
+    },
+    "key groups": {
+      "fail_if_found": true
+    },
+    "key people": {
+      "fail_if_found": true
+    },
+    "key populations": {
+      "fail_if_found": true
+    },
+    "Latinx": {
+      "fail_if_found": true
+    },
+    "LGBT": {
+      "fail_if_found": true
+    },
+    "LGBTQ": {
+      "fail_if_found": true
+    },
+    "marginalize": {
+      "fail_if_found": true
+    },
+    "marginalized": {
+      "fail_if_found": true
+    },
+    "men who have sex with men": {
+      "fail_if_found": true
+    },
+    "mental health": {
+      "fail_if_found": true
+    },
+    "minorities": {
+      "fail_if_found": true
+    },
+    "minority": {
+      "fail_if_found": true
+    },
+    "most risk": {
+      "fail_if_found": true
+    },
+    "MSM": {
+      "fail_if_found": true
+    },
+    "multicultural": {
+      "fail_if_found": true
+    },
+    "Mx": {
+      "fail_if_found": true
+    },
+    "Native American": {
+      "fail_if_found": true
+    },
+    "non-binary": {
+      "fail_if_found": true
+    },
+    "nonbinary": {
+      "fail_if_found": true
+    },
+    "oppression": {
+      "fail_if_found": true
+    },
+    "oppressive": {
+      "fail_if_found": true
+    },
+    "orientation": {
+      "fail_if_found": true
+    },
+    "people uterus": {
+      "fail_if_found": true
+    },
+    "people-centered care": {
+      "fail_if_found": true
+    },
+    "person-centered": {
+      "fail_if_found": true
+    },
+    "person-centered care": {
+      "fail_if_found": true
+    },
+    "polarization": {
+      "fail_if_found": true
+    },
+    "political": {
+      "fail_if_found": true
+    },
+    "pollution": {
+      "fail_if_found": true
+    },
+    "pregnant people": {
+      "fail_if_found": true
+    },
+    "pregnant person": {
+      "fail_if_found": true
+    },
+    "pregnant persons": {
+      "fail_if_found": true
+    },
+    "prejudice": {
+      "fail_if_found": true
+    },
+    "privilege": {
+      "fail_if_found": true
+    },
+    "privileges": {
+      "fail_if_found": true
+    },
+    "promote diversity": {
+      "fail_if_found": true
+    },
+    "promoting diversity": {
+      "fail_if_found": true
+    },
+    "pronoun": {
+      "fail_if_found": true
+    },
+    "pronouns": {
+      "fail_if_found": true
+    },
+    "prostitute": {
+      "fail_if_found": true
+    },
+    "race": {
+      "fail_if_found": true
+    },
+    "race and ethnicity": {
+      "fail_if_found": true
+    },
+    "racial": {
+      "fail_if_found": true
+    },
+    "racial diversity": {
+      "fail_if_found": true
+    },
+    "racial identity": {
+      "fail_if_found": true
+    },
+    "racial inequality": {
+      "fail_if_found": true
+    },
+    "racial justice": {
+      "fail_if_found": true
+    },
+    "racially": {
+      "fail_if_found": true
+    },
+    "racism": {
+      "fail_if_found": true
+    },
+    "segregation": {
+      "fail_if_found": true
+    },
+    "sense of belonging": {
+      "fail_if_found": true
+    },
+    "sex": {
+      "fail_if_found": true
+    },
+    "sexual preferences": {
+      "fail_if_found": true
+    },
+    "sexuality": {
+      "fail_if_found": true
+    },
+    "social justice": {
+      "fail_if_found": true
+    },
+    "sociocultural": {
+      "fail_if_found": true
+    },
+    "socioeconomic": {
+      "fail_if_found": true
+    },
+    "status": {
+      "fail_if_found": true
+    },
+    "stereotype": {
+      "fail_if_found": true
+    },
+    "stereotypes": {
+      "fail_if_found": true
+    },
+    "systemic": {
+      "fail_if_found": true
+    },
+    "systemically": {
+      "fail_if_found": true
+    },
+    "they/them": {
+      "fail_if_found": true
+    },
+    "trans": {
+      "fail_if_found": true
+    },
+    "transgender": {
+      "fail_if_found": true
+    },
+    "transsexual": {
+      "fail_if_found": true
+    },
+    "trauma": {
+      "fail_if_found": true
+    },
+    "traumatic": {
+      "fail_if_found": true
+    },
+    "tribal": {
+      "fail_if_found": true
+    },
+    "unconscious bias": {
+      "fail_if_found": true
+    },
+    "underappreciated": {
+      "fail_if_found": true
+    },
+    "underprivileged": {
+      "fail_if_found": true
+    },
+    "underrepresentation": {
+      "fail_if_found": true
+    },
+    "underrepresented": {
+      "fail_if_found": true
+    },
+    "underserved": {
+      "fail_if_found": true
+    },
+    "undervalued": {
+      "fail_if_found": true
+    },
+    "victim": {
+      "fail_if_found": true
+    },
+    "victims": {
+      "fail_if_found": true
+    },
+    "vulnerable populations": {
+      "fail_if_found": true
+    },
+    "women": {
+      "fail_if_found": true
+    },
+    "women and underrepresented": {
+      "fail_if_found": true
+    }
+  }

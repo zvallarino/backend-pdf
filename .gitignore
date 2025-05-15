@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+# If your venv is inside your project directory (e.g., .venv, venv, env)
+.venv/
+venv/
+env/
+ENV/
+
+# Django stuff
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Media files - if you were storing user uploads directly in the project (not recommended for production)
+# media/ (If you created a 'media' folder at the project root for user uploads)
+
+# Static files collected by collectstatic - these are generated
+# If your STATIC_ROOT is within your project, uncomment and adjust if needed
+#staticfiles/
+#static_root/
+
+# IDE / Editor specific files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.DS_Store
+Thumbs.db
+
+# Secrets - Never commit these!
+# If you have a .env file for environment variables
+.env
+*.env
+
+# Coverage reports
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Python test reports
+.pytest_cache/
+.tox/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Specific to your project (if any)
+# For example, if you have temporary data or output files you don't want to track
+# temp_output/
+# sensitive_data.csv
+
+# SQLite Journal Files (if you ever use SQLite for testing locally)
+# Already covered by db.sqlite3-journal but good to be explicit if needed for other names
+
+# Operating System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Cloud provider specific files (less common for backend code repo, but just in case)
+# .elasticbeanstalk/
+# .serverless/
+
+# If you created a `media` directory inside your `backend` directory for temporary uploads
+# and don't want to track its contents (assuming production uses cloud storage)
+# /media/  (Note the leading slash to ensure it's from the root of where .gitignore is)
