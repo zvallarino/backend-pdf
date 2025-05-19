@@ -3,10 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
-# from .serializers import FileUploadSerializer # Old serializer
-from .serializers import MultiFileUploadSerializer # New serializer
+from .serializers import MultiFileUploadSerializer
 import pdfplumber
-from docx import Document # Assuming you'll add .docx support
+from docx import Document
 import io
 import re
 import json
@@ -14,7 +13,6 @@ import os
 from django.conf import settings
 from collections import defaultdict
 import traceback
-
 
 def load_keywords():
     file_path = os.path.join(settings.BASE_DIR, 'pdf_reader', 'keywords.json')
@@ -29,6 +27,9 @@ def load_keywords():
         return {}
 
 WORDS_TO_CHECK = load_keywords()
+# Pre-compile a regex for tokenizing words on a page for vicinity checks
+WORD_TOKENIZER_REGEX = re.compile(r"[\w'-]+")
+
 
 class CheckDocumentView(APIView):
     parser_classes = (MultiPartParser, FormParser)
@@ -40,134 +41,176 @@ class CheckDocumentView(APIView):
 
         uploaded_files = serializer.validated_data['files']
         results_for_all_files = []
+        CONTEXT_WINDOW_CHARS = 60 # Characters before and after match for context phrase
 
         for uploaded_file in uploaded_files:
             file_name_original = uploaded_file.name
             file_name_lower = file_name_original.lower()
             current_file_result = {
-                "filename": file_name_original,
-                "status": "pass", # Default for this file
-                "fail_summary": [],
-                "found_instances": []
+                "filename": file_name_original, "status": "pass",
+                "fail_summary": [], "found_instances": [], "error_message": None
             }
 
-            all_found_instances_for_file = []
-            keyword_tracking_for_file = defaultdict(lambda: {'count': 0, 'pages': set()})
-            # Initialize fail_if_found property for keywords being tracked for this file
-            for kw, props in WORDS_TO_CHECK.items():
-                 keyword_tracking_for_file[kw]['fail_if_found'] = props.get('fail_if_found', False)
-
+            keyword_tracking_for_file = defaultdict(lambda: {'count': 0, 'pages': set(), 'fail_if_found': False})
+            for kw, props in WORDS_TO_CHECK.items(): # Initialize all, including trigger words by their name
+                keyword_tracking_for_file[kw]['fail_if_found'] = props.get('fail_if_found', False)
+                # If vicinity config exists, it will also get its fail_if_found from its own entry.
 
             document_failed_due_to_keyword_for_file = False
-
-            # print(f"\n--- Processing file: {file_name_original} ---")
+            all_found_instances_for_file_accumulated = []
 
             try:
                 page_texts_to_process = []
-
                 if file_name_lower.endswith('.pdf'):
-                    # Ensure the file pointer is at the beginning if reading multiple times or from memory
                     uploaded_file.seek(0)
                     with pdfplumber.open(uploaded_file) as pdf:
+                        if not pdf.pages:
+                            current_file_result.update({"status": "error", "error_message": "PDF has no pages or could not be read."})
+                            results_for_all_files.append(current_file_result)
+                            continue
                         for page_num, page_obj in enumerate(pdf.pages):
                             page_text = page_obj.extract_text()
-                            if not page_text:
-                                # print(f"  Page {page_num + 1} ({file_name_original}): No text extracted.")
-                                continue
-                            # print(f"  --- Page {page_num + 1} Text ({file_name_original}) ---")
-                            # print(page_text[:200] + "..." if len(page_text) > 200 else page_text) # Print snippet
-                            # print("  ------------------------------------")
-                            page_texts_to_process.append((f"Page {page_num + 1}", page_text, page_num + 1))
-
+                            if page_text:
+                                page_texts_to_process.append((f"Page {page_num + 1}", page_text, page_num + 1))
                 elif file_name_lower.endswith('.docx'):
-                    uploaded_file.seek(0) # Reset file pointer
-                    doc = Document(io.BytesIO(uploaded_file.read()))
-                    # print(f"  --- DOCX Content ({file_name_original}) ---")
-                    full_doc_text_list = []
-                    for para_num, para in enumerate(doc.paragraphs):
-                        para_text = para.text
-                        # print(f"  Paragraph {para_num + 1}: {para_text[:100]}...") # Optional: print para snippet
-                        full_doc_text_list.append(para_text)
-                    combined_text = "\n".join(full_doc_text_list)
-                    # print(combined_text[:500] + "..." if len(combined_text) > 500 else combined_text) # Print snippet
-                    # print("  ------------------------------------")
-                    # For DOCX, page_num is 1, page_identifier is "Document"
-                    page_texts_to_process.append(("Document", combined_text, 1))
+                    uploaded_file.seek(0)
+                    try:
+                        doc = Document(io.BytesIO(uploaded_file.read()))
+                        full_doc_text_list = [para.text for para in doc.paragraphs if para.text]
+                        combined_text = "\n".join(full_doc_text_list)
+                        if combined_text:
+                            page_texts_to_process.append(("Document", combined_text, 1))
+                    except Exception as docx_err:
+                        current_file_result.update({"status": "error", "error_message": f"Could not read DOCX content: {str(docx_err)}"})
+                        results_for_all_files.append(current_file_result)
+                        continue
                 else:
-                    current_file_result["status"] = "error"
-                    current_file_result["error_message"] = "Unsupported file type."
+                    current_file_result.update({"status": "error", "error_message": "Unsupported file type."})
                     results_for_all_files.append(current_file_result)
-                    # print(f"  Unsupported file type: {file_name_original}")
-                    continue # Skip to the next file
+                    continue
 
-                # --- Process extracted text for the current file ---
-                for page_identifier_str, text_content, current_page_number_for_tracking in page_texts_to_process:
-                    words_in_content = re.findall(r"[\w'-]+|[.,!?;()]", text_content)
+                if not page_texts_to_process and current_file_result["status"] == "pass":
+                    pass # Will naturally pass with no found_instances
 
-                    for i, current_word_in_content in enumerate(words_in_content):
-                        cleaned_word = re.sub(r"[,.!?;()]", "", current_word_in_content).lower()
-                        if not cleaned_word:
-                            continue
+                for _page_label, text_content, current_page_num_for_tracking in page_texts_to_process:
+                    # Tokenize the current page's text_content for vicinity checks
+                    page_word_objects = []
+                    for match_obj in WORD_TOKENIZER_REGEX.finditer(text_content):
+                        page_word_objects.append({
+                            'text': match_obj.group(0),
+                            'lower': match_obj.group(0).lower(),
+                            'start': match_obj.start(),
+                            'end': match_obj.end()
+                        })
+                    
+                    if not page_word_objects: continue
 
-                        for keyword_to_check, properties in WORDS_TO_CHECK.items():
-                            if keyword_to_check.lower() == cleaned_word:
-                                keyword_tracking_for_file[keyword_to_check]['count'] += 1
-                                keyword_tracking_for_file[keyword_to_check]['pages'].add(current_page_number_for_tracking)
+                    for keyword_from_json, properties in WORDS_TO_CHECK.items():
+                        vicinity_config = properties.get("check_vicinity")
 
-                                if properties.get("fail_if_found", False):
-                                    document_failed_due_to_keyword_for_file = True
+                        if vicinity_config:
+                            # --- Logic for Trigger Keywords with Vicinity Check ---
+                            trigger_keyword_lower = keyword_from_json.lower()
+                            proximity_terms_lower = [term.lower() for term in vicinity_config["terms"]]
+                            window = vicinity_config["window"]
+                            report_as = vicinity_config.get("report_as_concept", keyword_from_json)
 
-                                start_index = max(0, i - 2)
-                                end_index = min(len(words_in_content), i + 3)
-                                context_list = [words_in_content[k] for k in range(start_index, i)] + \
-                                               [current_word_in_content] + \
-                                               [words_in_content[k] for k in range(i + 1, end_index)]
-                                context_phrase = " ".join(context_list)
+                            for idx, word_obj in enumerate(page_word_objects):
+                                if word_obj['lower'] == trigger_keyword_lower:
+                                    # Found an instance of the trigger word
+                                    scan_start_idx = max(0, idx - window)
+                                    # +1 to include the word at end of window, +1 because word_obj is one word
+                                    scan_end_idx = min(len(page_word_objects), idx + 1 + window) 
+                                    
+                                    found_prox_match_details = None
+                                    for k in range(scan_start_idx, scan_end_idx):
+                                        if k == idx: continue # Skip the trigger word itself
+                                        if page_word_objects[k]['lower'] in proximity_terms_lower:
+                                            found_prox_match_details = page_word_objects[k]
+                                            break
+                                    
+                                    if found_prox_match_details:
+                                        # Conceptual match found!
+                                        keyword_to_report = report_as # Use the concept name for tracking if available
+                                        
+                                        # Update tracking using the main trigger keyword_from_json or report_as
+                                        # For simplicity in keyword_tracking_for_file, let's use keyword_from_json
+                                        # The fail_summary will then show "breastfeed" (for example)
+                                        keyword_tracking_for_file[keyword_from_json]['count'] += 1
+                                        keyword_tracking_for_file[keyword_from_json]['pages'].add(current_page_num_for_tracking)
 
-                                all_found_instances_for_file.append({
-                                    "page": current_page_number_for_tracking,
-                                    "word": keyword_to_check,
-                                    "phrase": context_phrase,
-                                    "original_match": current_word_in_content
-                                })
+                                        if properties.get("fail_if_found", False):
+                                            document_failed_due_to_keyword_for_file = True
+                                        
+                                        # Construct original_match string
+                                        # Order them by appearance in text
+                                        first_word_obj = word_obj if word_obj['start'] < found_prox_match_details['start'] else found_prox_match_details
+                                        second_word_obj = found_prox_match_details if word_obj['start'] < found_prox_match_details['start'] else word_obj
+                                        original_match_text = f"{first_word_obj['text']} ... {second_word_obj['text']}"
+                                        
+                                        # Determine character span of the conceptual match for context
+                                        match_span_start_char = min(word_obj['start'], found_prox_match_details['start'])
+                                        match_span_end_char = max(word_obj['end'], found_prox_match_details['end'])
 
-                current_file_result["found_instances"] = all_found_instances_for_file
-                fail_summary_report_for_file = []
+                                        context_start = max(0, match_span_start_char - CONTEXT_WINDOW_CHARS)
+                                        context_end = min(len(text_content), match_span_end_char + CONTEXT_WINDOW_CHARS)
+                                        context_phrase = text_content[context_start:context_end]
+                                        if context_start > 0: context_phrase = "... " + context_phrase
+                                        if context_end < len(text_content): context_phrase += " ..."
 
+                                        all_found_instances_for_file_accumulated.append({
+                                            "page": current_page_num_for_tracking,
+                                            "word": keyword_to_report, # "breastfeed people/person" or just "breastfeed"
+                                            "phrase": context_phrase.strip(),
+                                            "original_match": original_match_text
+                                        })
+                        else:
+                            # --- Logic for Direct Keyword/Phrase Matching (No Vicinity Check) ---
+                            pattern = r'\b' + re.escape(keyword_from_json) + r'\b'
+                            try:
+                                for match in re.finditer(pattern, text_content, re.IGNORECASE):
+                                    original_match_text = match.group(0)
+                                    
+                                    keyword_tracking_for_file[keyword_from_json]['count'] += 1
+                                    keyword_tracking_for_file[keyword_from_json]['pages'].add(current_page_num_for_tracking)
+
+                                    if properties.get("fail_if_found", False):
+                                        document_failed_due_to_keyword_for_file = True
+
+                                    start_char_index = match.start()
+                                    end_char_index = match.end()
+                                    context_start = max(0, start_char_index - CONTEXT_WINDOW_CHARS)
+                                    context_end = min(len(text_content), end_char_index + CONTEXT_WINDOW_CHARS)
+                                    context_phrase = text_content[context_start:context_end]
+                                    if context_start > 0: context_phrase = "... " + context_phrase
+                                    if context_end < len(text_content): context_phrase += " ..."
+                                    
+                                    all_found_instances_for_file_accumulated.append({
+                                        "page": current_page_num_for_tracking,
+                                        "word": keyword_from_json,
+                                        "phrase": context_phrase.strip(),
+                                        "original_match": original_match_text
+                                    })
+                            except re.error: # Should not happen with re.escape but good practice
+                                pass 
+                
+                current_file_result["found_instances"] = all_found_instances_for_file_accumulated
                 if document_failed_due_to_keyword_for_file:
                     current_file_result["status"] = "fail"
+                    fail_summary_list = []
                     for kw, data in keyword_tracking_for_file.items():
                         if data['fail_if_found'] and data['count'] > 0:
-                            fail_summary_report_for_file.append({
-                                "keyword": kw,
+                            fail_summary_list.append({
+                                "keyword": kw, # This will be the main trigger keyword (e.g., "breastfeed")
                                 "count": data['count'],
                                 "pages": sorted(list(data['pages']))
                             })
-                elif not all_found_instances_for_file: # No keywords found at all
-                    current_file_result["status"] = "pass"
-                else: # Keywords found, but none that cause a "fail"
-                    current_file_result["status"] = "pass"
-
-                current_file_result["fail_summary"] = fail_summary_report_for_file
-
-                # print(f"  --- Final Status for {file_name_original}: {current_file_result['status'].upper()} ---")
-                if fail_summary_report_for_file:
-                    # print("    Failure Summary:")
-                    for item in fail_summary_report_for_file:
-                        print(f"      - {item['keyword']} was found {item['count']} times on pages: {', '.join(map(str, item['pages']))}")
-                if all_found_instances_for_file:
-                    print("    Detailed Instances found:", len(all_found_instances_for_file))
-                elif current_file_result['status'] == "pass":
-                    print("    No specified keywords found.")
-                print(f"  --- Finished processing {file_name_original} ---\n")
-
-
+                    current_file_result["fail_summary"] = fail_summary_list
+            
             except Exception as e:
-                print(f"  Error processing file {file_name_original}: {e}")
+                print(f"  Overall error processing file {file_name_original}: {e}")
                 print(traceback.format_exc())
-                current_file_result["status"] = "error"
-                current_file_result["error_message"] = f"An unexpected error occurred: {str(e)}"
-
+                current_file_result.update({"status": "error", "error_message": f"An unexpected error: {str(e)}"})
+            
             results_for_all_files.append(current_file_result)
-
         return Response(results_for_all_files, status=status.HTTP_200_OK)
