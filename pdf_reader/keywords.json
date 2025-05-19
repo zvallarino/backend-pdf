@@ -83,19 +83,7 @@
     "BIPOC": {
       "fail_if_found": true
     },
-    "Black": {
-      "fail_if_found": true
-    },
-    "breastfeed people": {
-      "fail_if_found": true
-    },
-    "breastfeed person": {
-      "fail_if_found": true
-    },
-    "chestfeed people": {
-      "fail_if_found": true
-    },
-    "chestfeed person": {
+    "black": {
       "fail_if_found": true
     },
     "clean energy": {
@@ -272,7 +260,7 @@
     "genders": {
       "fail_if_found": true
     },
-    "Gulf of Mexico": {
+    "gulf of mexico": {
       "fail_if_found": true
     },
     "hate speech": {
@@ -417,9 +405,6 @@
       "fail_if_found": true
     },
     "orientation": {
-      "fail_if_found": true
-    },
-    "people uterus": {
       "fail_if_found": true
     },
     "people-centered care": {
@@ -595,5 +580,28 @@
     },
     "women and underrepresented": {
       "fail_if_found": true
-    }
+    },
+    "breastfeed": {
+      "fail_if_found": true,
+      "check_vicinity": {
+        "terms": ["people", "person"],
+        "window": 3,
+        "report_as_concept": "breastfeed people/person"
+      }
+    },
+    "chestfeed": {
+      "fail_if_found": true,
+      "check_vicinity": {
+        "terms": ["people", "person"],
+        "window": 3,
+        "report_as_concept": "chestfeed people/person"
+      }
+    },
+    "uterus": {
+      "fail_if_found": true,
+      "check_vicinity": {
+        "terms": ["people", "person"],
+        "window": 3,
+        "report_as_concept": "uterus with people/person"
+      }}
   }
